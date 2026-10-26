@@ -1,0 +1,5 @@
+<div class="links">
+  {% if projeto.url_site %}<a href="{{ projeto.url_site }}" target="_blank" rel="noopener">ver site ↗</a>{% endif %}
+  {% if projeto.url_codigo %}<a href="{{ projeto.url_codigo }}" target="_blank" rel="noopener">código ↗</a>{% elif projeto.codigo_privado %}<span class="off">código privado</span>{% endif %}
+  {% if mostrar_detalhes %}<a href="{{ projeto.get_absolute_url }}">detalhes →</a>{% endif %}
+</div>

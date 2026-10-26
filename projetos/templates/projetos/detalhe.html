@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block titulo %}{{ projeto.nome }} · {{ perfil.nome_curto }}{% endblock %}
+{% block descricao %}{{ projeto.resumo|default:projeto.problema|truncatechars:160 }}{% endblock %}
+
+{% block conteudo %}
+<div class="detalhe">
+  <a class="voltar" href="{% url 'core:home' %}#{% if projeto.construido %}projetos{% else %}planejamento{% endif %}">← todos os projetos</a>
+
+  <header class="det-head">
+    <span class="arquivo">~/projetos/{{ projeto.slug }}/</span>
+    <h1>{{ projeto.nome }}</h1>
+    <div>{% include "projetos/_status.html" %}</div>
+    {% if projeto.resumo %}<p class="lead">{{ projeto.resumo }}</p>{% endif %}
+    {% include "projetos/_links.html" %}
+  </header>
+
+  {% if projeto.prints.all %}
+  {# Aqui os prints aparecem inteiros, um embaixo do outro, sem cortar #}
+  <div class="galeria">
+    {% for print in projeto.prints.all %}
+    <figure>
+      <div class="frame">
+        <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">{{ projeto.dominio }}</span></div>
+        <div class="frame-img"><img src="{{ print.imagem.url }}" alt="{{ print.texto_alternativo }}"{% if not forloop.first %} loading="lazy"{% endif %}></div>
+      </div>
+      <figcaption>{{ print.legenda }}</figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if projeto.construido %}
+  <div class="det-grid">
+    <div class="det-bloco">
+      {% if projeto.lista_funcionalidades %}
+      <p class="col-title">o que o sistema faz</p>
+      <ul class="list">
+        {% for item in projeto.lista_funcionalidades %}<li>{{ item }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    <div class="det-bloco">
+      {% if projeto.aprendizado %}<p class="note"><b>o que aprendi</b>{{ projeto.aprendizado }}</p>{% endif %}
+      {% if projeto.proximo_passo %}<p class="note"><b>próximo passo</b>{{ projeto.proximo_passo }}</p>{% endif %}
+      {% if projeto.lista_stack %}
+      <div class="stack">{% for item in projeto.lista_stack %}<span>{{ item }}</span>{% endfor %}</div>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+  <div class="det-bloco">
+    <article class="spec">
+      <div class="spec-tab"><span>{{ projeto.slug }}/README.md</span>{% include "projetos/_status.html" %}</div>
+      <div class="spec-body">{% include "projetos/_ficha.html" %}</div>
+    </article>
+  </div>
+  {% endif %}
+
+  {% if outros %}
+  <nav class="outros" aria-label="Outros projetos">
+    <p class="col-title">outros projetos</p>
+    <div class="outros-lista">
+      {% for outro in outros %}<a href="{{ outro.get_absolute_url }}">{{ outro.slug }}/</a>{% endfor %}
+    </div>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

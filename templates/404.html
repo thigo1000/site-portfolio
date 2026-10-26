@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block titulo %}Página não encontrada{% endblock %}
+
+{% block conteudo %}
+<div class="erro">
+  <h1>Essa página não existe</h1>
+  <div class="term" aria-label="Mensagem de erro em formato de terminal">
+    <div class="term-head"><i></i><i></i><i></i><span>erro 404</span></div>
+    <div class="term-body">
+      <div class="ln"><span class="p">$</span> cd {{ request_path }}</div>
+      <div class="ln y">cd: {{ request_path }}: arquivo ou diretório inexistente</div>
+      <div class="ln"><span class="p">$</span> cd ~ <span class="d"># voltar para o início</span></div>
+    </div>
+  </div>
+  <a class="btn primary" href="{% url 'core:home' %}">Voltar para o início</a>
+</div>
+{% endblock %}

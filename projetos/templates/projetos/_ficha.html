@@ -1,0 +1,8 @@
+{# Ficha dos projetos em andamento/planejamento. Só mostra o que estiver preenchido. #}
+<dl>
+  {% if projeto.problema %}<dt>problema</dt><dd>{{ projeto.problema }}</dd>{% endif %}
+  {% if projeto.meu_papel %}<dt>meu papel</dt><dd>{{ projeto.meu_papel }}</dd>{% endif %}
+  {% if projeto.plano %}<dt>plano</dt><dd>{{ projeto.plano }}</dd>{% endif %}
+  {% if projeto.foco %}<dt>foco</dt><dd>{{ projeto.foco }}</dd>{% endif %}
+  {% if projeto.lista_stack %}<dt>stack</dt><dd>{{ projeto.lista_stack|join:" · " }}</dd>{% endif %}
+</dl>

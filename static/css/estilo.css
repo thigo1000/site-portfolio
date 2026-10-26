@@ -1,0 +1,266 @@
+/* ==========================================================================
+   Portfólio Thiago Limeira
+   Visual aprovado no artefato, separado em arquivo próprio.
+
+   Layout: coluna de ~1080px; topo com nome + terminal animado; projetos com
+   print em moldura de navegador; planejados como "arquivos de especificação".
+
+   Cores: todas ficam em variáveis (--bg, --ink, --accent...). O tema escuro
+   só troca o valor das variáveis, o resto do CSS não muda.
+   ========================================================================== */
+
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --surface:#F4F6F9; --ink:#0B0C0E; --muted:#454C58; --sub:#2C323C; --line:#E3E6EB;
+  --accent:#1F55F0; --accent-soft:#E8EEFE; --on-accent:#FFFFFF;
+  --term:#0B0D12; --term-ink:#D8DEE8; --term-dim:#6C7584; --term-blue:#6F9BFF; --term-ok:#5CD08F; --term-warn:#F0B35A;
+  --ok:#14804A; --warn:#A8620B; --plan:#4A5468;
+  --f-sans:"Geist", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A0B0E; --surface:#12151B; --ink:#EEF1F5; --muted:#A9B0BD; --sub:#CDD3DC; --line:#232832;
+  --accent:#6C97FF; --accent-soft:#16203A; --on-accent:#0A0B0E;
+  --term:#05070A; --ok:#4FC685; --warn:#E5A54B; --plan:#97A1B6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A0B0E; --surface:#12151B; --ink:#EEF1F5; --muted:#A9B0BD; --sub:#CDD3DC; --line:#232832;
+  --accent:#6C97FF; --accent-soft:#16203A; --on-accent:#0A0B0E;
+  --term:#05070A; --ok:#4FC685; --warn:#E5A54B; --plan:#97A1B6; color-scheme:dark}
+
+/* Base */
+*{box-sizing:border-box}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.pad{padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+.inner{max-width:1080px;margin:0 auto}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--f-mono)}
+
+/* Barra superior */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .inner{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+.brand{font:600 15px var(--f-mono);color:var(--ink);text-decoration:none}
+.brand b{color:var(--accent);font-weight:600}
+.nav{display:flex;gap:6px;font:600 14.5px var(--f-sans)}
+.nav a{color:var(--ink);text-decoration:none;padding:7px 12px;border-radius:7px}
+.nav a:hover{background:var(--accent-soft);color:var(--accent)}
+.theme-btn{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 12px var(--f-mono);cursor:pointer}
+.theme-btn svg{width:15px;height:15px}
+.top-right{display:flex;align-items:center;gap:22px}
+
+main{display:flex;flex-direction:column;gap:96px;padding-block:56px 72px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center}
+.hero > *{min-width:0}
+.hello{font:500 14px var(--f-mono);color:var(--accent)}
+.hero h1{font-size:clamp(44px,7.2vw,80px);font-weight:800;letter-spacing:-.035em;margin-top:10px}
+.hero .role{font:500 clamp(15px,1.9vw,18px) var(--f-mono);color:var(--muted);margin-top:16px}
+.hero .role span{color:var(--ink)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 14px var(--f-sans);text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn svg{width:16px;height:16px}
+
+.term{background:var(--term);border-radius:12px;border:1px solid #1D222C;overflow:hidden;box-shadow:0 24px 48px -28px rgba(10,20,50,.55)}
+.term-head{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid #1A1F28}
+.term-head i{width:11px;height:11px;border-radius:50%;background:#2A303B}
+.term-head span{margin-left:8px;font:400 12px var(--f-mono);color:var(--term-dim)}
+.term-body{padding:16px 18px 20px;font:400 13.5px/1.75 var(--f-mono);color:var(--term-ink);min-height:300px;overflow-x:auto}
+.term-body .ln{white-space:pre-wrap;overflow-wrap:anywhere}
+.p{color:var(--term-blue)} .d{color:var(--term-dim)} .g{color:var(--term-ok)} .y{color:var(--term-warn)}
+.caret{display:inline-block;width:8px;height:16px;background:var(--term-ink);vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.caret{animation:none}}
+
+/* Cabeçalho de seção */
+section{display:flex;flex-direction:column;gap:32px;scroll-margin-top:80px}
+.sec-head{display:flex;flex-direction:column;gap:10px}
+.sec-head .tag{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font:600 12.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:6px}
+.sec-head .tag::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--accent)}
+main section + section{border-top:1px solid var(--line);padding-top:72px}
+main section#contato{border-top:none;padding-top:0}
+.sec-head h2{font-size:clamp(30px,4.4vw,44px);font-weight:700;letter-spacing:-.025em}
+.sec-head p{color:var(--muted);max-width:60ch}
+
+/* Sobre */
+.about{display:grid;grid-template-columns:240px 1fr;gap:48px;align-items:start}
+.about > *{min-width:0}
+.photo{aspect-ratio:4/5;max-width:100%;border-radius:12px;border:1.5px dashed var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.photo b{font:700 56px var(--f-sans);letter-spacing:-.04em;color:var(--muted)}
+.photo span{font:400 12px var(--f-mono);color:var(--muted)}
+.about-text{display:flex;flex-direction:column;gap:18px;font-size:18px;line-height:1.65;max-width:62ch}
+.about-text p:first-child{font-size:21px;font-weight:500;line-height:1.5}
+.facts-row{display:flex;flex-wrap:wrap;gap:8px 22px;font:400 13px var(--f-mono);color:var(--muted);padding-top:6px;border-top:1px solid var(--line);margin-top:6px;padding-top:18px}
+.facts-row b{color:var(--ink);font-weight:500}
+
+/* Status */
+.status{display:inline-flex;align-items:center;gap:7px;font:500 12px var(--f-mono);padding:4px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.status.ok{color:var(--ok)} .status.warn{color:var(--warn)} .status.plan{color:var(--plan)}
+
+/* Projetos com tela */
+.shots{display:flex;flex-direction:column;gap:56px}
+.shot{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:start}
+.shot > *{min-width:0}
+.shot:nth-child(even) .frame-wrap{order:2}
+.frame{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.frame-bar{display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.frame-bar i{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+.frame-url{margin-left:6px;flex:1;min-width:0;font:400 12px var(--f-mono);color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frame-view{aspect-ratio:16/10;max-width:100%;position:relative;background:var(--surface)}
+.frame-view img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.frame-view img.contain{object-fit:contain;background:#F1F4F9}
+.tabs{display:flex;gap:6px;margin-top:12px}
+.tabs button{font:500 12px var(--f-mono);padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+.shot-info{display:flex;flex-direction:column;gap:16px}
+.shot-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.shot h3{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.shot .lead{color:var(--muted)}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.list li{display:grid;grid-template-columns:16px 1fr;gap:8px;font-size:15px}
+.list li::before{content:"→";font:500 13px var(--f-mono);color:var(--accent);padding-top:2px}
+.note{border-left:2px solid var(--accent);padding:2px 0 2px 14px;font-size:14.5px;color:var(--muted)}
+.note b{display:block;font:500 12px var(--f-mono);color:var(--ink);margin-bottom:3px}
+.stack{display:flex;flex-wrap:wrap;gap:6px}
+.stack span{font:400 12px var(--f-mono);padding:3px 8px;border-radius:5px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px 20px;font:500 13px var(--f-mono)}
+.links .off{color:var(--muted);font-weight:400}
+
+/* Projetos planejados: arquivo de especificação */
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.spec{border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.spec-tab{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+.spec-tab span{font:400 12px var(--f-mono);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.spec-body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;flex:1}
+.spec h3{font-size:21px;font-weight:700;letter-spacing:-.015em}
+.spec dl{margin:0;display:grid;grid-template-columns:78px 1fr;gap:10px 14px;font-size:14.5px}
+.spec dt{font:500 12px var(--f-mono);color:var(--accent);padding-top:2px}
+.spec dd{margin:0;color:var(--muted)}
+
+/* Tecnologias */
+.tech{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tcol{border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.tcol-head{display:flex;flex-direction:column;gap:4px}
+.tcol-head h3{font-size:19px;font-weight:700}
+.tcol-head span{font:400 12px var(--f-mono);color:var(--muted)}
+.tcol.learned{background:var(--surface)}
+.tcol.learning{border-color:var(--accent);background:var(--accent-soft)}
+.tcol.wish{border-style:dashed}
+.tcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.tcol li{display:flex;flex-direction:column;gap:2px}
+.tcol li b{font-weight:700;font-size:16.5px;color:var(--ink)}
+.tcol li small{color:var(--sub);font-size:14.5px;line-height:1.5}
+.tcol-head span{color:var(--sub)}
+
+/* Trajetória */
+.career{display:grid;grid-template-columns:1.4fr 1fr;gap:48px}
+.career > *{min-width:0}
+.col-title{font:500 13px var(--f-mono);color:var(--muted);margin-bottom:18px}
+.tl{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+.tl li{position:relative;padding:0 0 26px 24px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:-5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:1.5px solid var(--muted)}
+.tl .when{font:400 12.5px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.tl h3{font-size:17px;font-weight:600;margin-top:2px}
+.tl p{color:var(--muted);font-size:14.5px;margin-top:2px}
+.edu{display:flex;flex-direction:column;gap:14px}
+.edu div{border:1px solid var(--line);border-radius:10px;padding:16px}
+.edu .when{font:400 12.5px var(--f-mono);color:var(--muted)}
+.edu h3{font-size:17px;font-weight:600;margin-top:2px}
+.edu p{color:var(--muted);font-size:14.5px}
+
+/* Contato */
+.contact{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:clamp(24px,4vw,40px);display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+.contact > *{min-width:0}
+.contact h2{font-size:clamp(28px,4vw,40px);font-weight:700;letter-spacing:-.025em}
+.contact p{color:var(--muted);margin-top:8px;max-width:48ch}
+.contact-links{display:flex;flex-direction:column;gap:10px;min-width:0}
+.clink{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;font:400 14px var(--f-mono)}
+.clink:hover{border-color:var(--accent)}
+.clink span:first-child{color:var(--muted);font-size:12px}
+.clink span:last-child{overflow-wrap:anywhere;text-align:right}
+button.clink{cursor:pointer;width:100%}
+
+footer{border-top:1px solid var(--line);padding-block:22px 28px;font:400 12px var(--f-mono);color:var(--muted)}
+
+/* ---------- Adições da versão em Django ---------- */
+
+/* Coluna central que herda o espaçamento do <main> (antes era style inline) */
+.secoes{display:flex;flex-direction:column;gap:inherit}
+
+/* Foto real no Sobre mim (quando enviada pelo admin) */
+.photo.com-foto{border:1px solid var(--line);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Etiqueta "Contato" (antes era style inline) */
+.contact .tag{display:inline-block;font:600 12.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:6px}
+.contact h2{margin-top:10px}
+
+/* Projeto sem print cadastrado ainda */
+.sem-print{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:400 13px var(--f-mono);color:var(--muted)}
+
+/* Título do projeto vira link pra página dele */
+.shot h3 a,.spec h3 a{color:inherit;text-decoration:none}
+.shot h3 a:hover,.spec h3 a:hover{text-decoration:underline;text-decoration-thickness:2px}
+
+/* Página de um projeto */
+.detalhe{display:flex;flex-direction:column;gap:48px}
+.voltar{align-self:flex-start;font:500 13px var(--f-mono);text-decoration:none}
+.voltar:hover{text-decoration:underline}
+.det-head{display:flex;flex-direction:column;gap:14px;max-width:780px}
+.det-head .arquivo{font:400 13px var(--f-mono);color:var(--muted)}
+.det-head h1{font-size:clamp(36px,6vw,60px);font-weight:800;letter-spacing:-.03em}
+.det-head .lead{font-size:18px;color:var(--muted);max-width:62ch}
+.galeria{display:flex;flex-direction:column;gap:32px}
+.galeria figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.galeria .frame-img{display:flex;justify-content:center;background:var(--surface)}
+.galeria .frame-img img{display:block;width:auto;max-width:100%;height:auto}
+.galeria figcaption{font:400 12.5px var(--f-mono);color:var(--muted)}
+.det-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start}
+.det-grid > *{min-width:0}
+.det-bloco{display:flex;flex-direction:column;gap:16px}
+.det-bloco .spec{max-width:720px}
+.outros{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:32px}
+.outros-lista{display:flex;flex-wrap:wrap;gap:8px}
+.outros-lista a{font:500 13px var(--f-mono);padding:7px 12px;border-radius:7px;border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.outros-lista a:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Página 404 */
+.erro{display:flex;flex-direction:column;gap:24px;max-width:640px;padding-block:24px}
+.erro h1{font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-.03em}
+.erro .term-body{min-height:0}
+.erro .btn{align-self:flex-start}
+
+@media (max-width:900px){
+  .det-grid{grid-template-columns:1fr}
+  .hero,.shot,.career,.contact{grid-template-columns:1fr}
+  .shot:nth-child(even) .frame-wrap{order:0}
+  .tech{grid-template-columns:1fr 1fr}
+  .tcol.wish{grid-column:1/-1}
+  .nav{display:none}
+}
+@media (max-width:640px){
+  main{gap:72px;padding-block:32px 56px}
+  .about{grid-template-columns:1fr;gap:24px}
+  .photo{width:160px}
+  .specs,.tech{grid-template-columns:1fr}
+  .tcol.wish{grid-column:auto}
+  .term-body{font-size:12.5px;min-height:0}
+  .about-text{font-size:17px}
+  .about-text p:first-child{font-size:19px}
+  .spec dl{grid-template-columns:1fr;gap:2px}
+  .spec dd{margin-bottom:8px}
+  .theme-btn .lbl{display:none}
+}

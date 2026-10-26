@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+  {# ===================== Topo: nome + terminal ===================== #}
+  <section class="hero" id="inicio">
+    <div>
+      <p class="hello">// olá, eu sou</p>
+      <h1>{{ perfil.nome }}</h1>
+      <p class="role"><span>{{ perfil.cargo }}</span> · {{ perfil.cidade }}</p>
+      <div class="actions">
+        <a class="btn primary" href="#projetos">Ver projetos</a>
+        {% if perfil.github_url %}
+        <a class="btn" href="{{ perfil.github_url }}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg>
+          GitHub
+        </a>
+        {% endif %}
+        {% if perfil.linkedin_url %}
+        <a class="btn" href="{{ perfil.linkedin_url }}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>
+          LinkedIn
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {# O terminal é montado com os projetos do banco: cadastrou projeto novo, ele aparece aqui. #}
+    {# Cada .ln fica numa linha só, porque o CSS respeita espaços e quebras (white-space: pre-wrap). #}
+    <div class="term" aria-label="Terminal com resumo dos projetos">
+      <div class="term-head"><i></i><i></i><i></i><span>{{ perfil.primeiro_nome|lower }}@dev: ~</span></div>
+      <div class="term-body" id="term">
+        <div class="ln"><span class="p">$</span> whoami</div>
+        <div class="ln d">{{ perfil.nome_curto|lower }} · {{ perfil.cargo|lower }} · {{ perfil.cidade|lower }}</div>
+        <div class="ln"><span class="p">$</span> ls projetos/</div>
+        <div class="ln">{% for slug in slugs %}{{ slug }}/{% if not forloop.last %}  {% endif %}{% endfor %}</div>
+        <div class="ln"><span class="p">$</span> cat status.txt</div>
+        {% for linha in linhas_status %}<div class="ln"><span class="{{ linha.cor }}">●</span> {{ linha.texto }}</div>
+        {% endfor %}<div class="ln"><span class="p">$</span> <span class="caret"></span></div>
+      </div>
+    </div>
+  </section>
+
+  {# ===================== Sobre mim ===================== #}
+  <section id="sobre">
+    <div class="sec-head"><span class="tag">Sobre mim</span><h2>{{ perfil.titulo_sobre }}</h2></div>
+    <div class="about">
+      {% if perfil.foto %}
+        <div class="photo com-foto"><img src="{{ perfil.foto.url }}" alt="Foto de {{ perfil.nome }}"></div>
+      {% else %}
+        <div class="photo" role="img" aria-label="Iniciais de {{ perfil.nome }}"><b>{{ perfil.iniciais }}</b></div>
+      {% endif %}
+      <div class="about-text">
+        {% for paragrafo in perfil.paragrafos_sobre %}<p>{{ paragrafo }}</p>{% endfor %}
+        {% if perfil.lista_destaques %}
+        <div class="facts-row">
+          {% for destaque, complemento in perfil.lista_destaques %}<span><b>{{ destaque }}</b>{% if complemento %} · {{ complemento }}{% endif %}</span>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {# ===================== Projetos construídos ===================== #}
+  {% if construidos %}
+  <section id="projetos">
+    <div class="sec-head"><span class="tag">Projetos</span><h2>O que já construí</h2><p>Sistemas com usuários reais, regras que vieram de quem usa e o que aprendi em cada um.</p></div>
+
+    <div class="shots">
+      {% for projeto in construidos %}
+      <article class="shot">
+        <div class="frame-wrap">
+          <div class="frame">
+            <div class="frame-bar"><i></i><i></i><i></i><span class="frame-url">{{ projeto.dominio }}</span></div>
+            <div class="frame-view">
+              {% for print in projeto.prints.all %}
+                <img src="{{ print.imagem.url }}" alt="{{ print.texto_alternativo }}" data-g="{{ projeto.slug }}" data-i="{{ forloop.counter0 }}"{% if print.mostrar_inteira %} class="contain"{% endif %}{% if not forloop.first %} hidden{% endif %} loading="lazy">
+              {% empty %}
+                <div class="sem-print">print em breve</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% if projeto.prints.all|length > 1 %}
+          <div class="tabs" data-tabs="{{ projeto.slug }}">{% for print in projeto.prints.all %}<button type="button" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" data-i="{{ forloop.counter0 }}">{{ print.legenda }}</button>{% endfor %}</div>
+          {% endif %}
+        </div>
+
+        <div class="shot-info">
+          <div class="shot-top"><h3><a href="{{ projeto.get_absolute_url }}">{{ projeto.nome }}</a></h3>{% include "projetos/_status.html" %}</div>
+          {% if projeto.resumo %}<p class="lead">{{ projeto.resumo }}</p>{% endif %}
+          {% if projeto.lista_funcionalidades %}
+          <ul class="list">
+            {% for item in projeto.lista_funcionalidades %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+          {% endif %}
+          {% if projeto.aprendizado %}<p class="note"><b>o que aprendi</b>{{ projeto.aprendizado }}</p>{% endif %}
+          {% if projeto.proximo_passo %}<p class="note"><b>próximo passo</b>{{ projeto.proximo_passo }}</p>{% endif %}
+          {% if projeto.lista_stack %}
+          <div class="stack">{% for item in projeto.lista_stack %}<span>{{ item }}</span>{% endfor %}</div>
+          {% endif %}
+          {% include "projetos/_links.html" with mostrar_detalhes=True %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===================== Em andamento e planejamento ===================== #}
+  {% if planejados %}
+  <section id="planejamento">
+    <div class="sec-head"><span class="tag">Em andamento e planejamento</span><h2>O que vem por aí</h2><p>Projetos que ainda estão no papel ou começando. Cada um parte de um problema concreto.</p></div>
+    <div class="specs">
+      {% for projeto in planejados %}
+      <article class="spec">
+        <div class="spec-tab"><span>{{ projeto.slug }}/README.md</span>{% include "projetos/_status.html" %}</div>
+        <div class="spec-body">
+          <h3><a href="{{ projeto.get_absolute_url }}">{{ projeto.nome }}</a></h3>
+          {% include "projetos/_ficha.html" %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===================== Tecnologias ===================== #}
+  <section id="tecnologias">
+    <div class="sec-head"><span class="tag">Tecnologias</span><h2>O que sei, o que estudo e o que vem depois</h2></div>
+    <div class="tech">
+      {% for coluna in colunas_tecnologia %}
+      <div class="tcol {{ coluna.classe }}">
+        <div class="tcol-head"><h3>{{ coluna.titulo }}</h3><span>{{ coluna.subtitulo }}</span></div>
+        <ul>
+          {% for tecnologia in coluna.itens %}
+          <li><b>{{ tecnologia.nome }}</b>{% if tecnologia.descricao %}<small>{{ tecnologia.descricao }}</small>{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {# ===================== Trajetória ===================== #}
+  <section id="trajetoria">
+    <div class="sec-head"><span class="tag">Trajetória</span><h2>Experiência e formação</h2></div>
+    <div class="career">
+      <div>
+        <p class="col-title">experiência profissional</p>
+        <ul class="tl">
+          {% for exp in experiencias %}
+          <li><span class="when">{{ exp.periodo }}</span><h3>{{ exp.cargo }}</h3><p>{{ exp.empresa }}</p></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <p class="col-title">formação</p>
+        <div class="edu">
+          {% for formacao in formacoes %}
+          <div><span class="when">{{ formacao.periodo }}</span><h3>{{ formacao.curso }}</h3><p>{{ formacao.instituicao }}</p></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ===================== Contato ===================== #}
+  <section id="contato">
+    <div class="contact">
+      <div>
+        <span class="tag mono">Contato</span>
+        <h2>Vamos conversar</h2>
+        {% if perfil.texto_contato %}<p>{{ perfil.texto_contato }}</p>{% endif %}
+      </div>
+      <div class="contact-links">
+        <button class="clink" id="copy-email" type="button" data-email="{{ perfil.email }}"><span id="email-lbl">e-mail · copiar</span><span id="email-text">{{ perfil.email }}</span></button>
+        {% if perfil.github_url %}<a class="clink" href="{{ perfil.github_url }}" target="_blank" rel="noopener"><span>github</span><span>{{ perfil.usuario_github }} ↗</span></a>{% endif %}
+        {% if perfil.linkedin_url %}<a class="clink" href="{{ perfil.linkedin_url }}" target="_blank" rel="noopener"><span>linkedin</span><span>{{ perfil.usuario_linkedin }} ↗</span></a>{% endif %}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

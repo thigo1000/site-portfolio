@@ -1,0 +1,20 @@
+# Ambiente virtual
+venv/
+.venv/
+
+# Segredos
+.env
+
+# Banco local e arquivos gerados
+db.sqlite3
+media/
+staticfiles/
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor e sistema
+.vscode/
+.DS_Store
+Thumbs.db
